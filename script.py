@@ -1,8 +1,10 @@
+
 from __future__ import absolute_import, division, print_function
 
 # Import key parts of the PsychoPy library:
-from psychopy import visual, core, event
+from psychopy import visual, core, event, prefs
 import sys
+import random as rd
 
 class window(object):
     def __init__(self):
@@ -21,34 +23,41 @@ class window(object):
     def create_window(self):
 
         win = visual.Window(size=(self.w_scr, self.h_scr),fullscr=True, monitor='testMonitor')
-        clock = core.Clock()
+        # clock = core.Clock()
 
 
-        img_lst = ['images/py1.jpeg', 'images/py2.jpeg', 'py3.jpeg', 'py4.jpeg']
-        img_one = visual.ImageStim(win=win, image=img_lst[0],pos=(-self.x_val,0))
-        img_two = visual.ImageStim(win=win, image=img_lst[0], pos=(self.x_val, 0))
+        img_lst = ['images/py1.jpeg', 'images/py2.jpeg', 'images/py3.jpeg', 'images/py4.jpeg']
+        num_img = len(img_lst)
+
+        prefs.general['shutdownKey'] = 'q'
+        event.globalKeys.add('q', func=core.quit)
+
+        for i in range(10):
+            key_pressed = self.show_pics(img_lst[rd.randint(0,num_img-1)], img_lst[rd.randint(0,num_img-1)], win)
+
+    def show_pics(self, img_one, img_two, win):
+        trial_tmr = core.Clock()
+        # event.globalKeys.add('q', func=core.quit)
+        img_one = visual.ImageStim(win=win, image=img_one,pos=(-self.x_val,0))
+        img_two = visual.ImageStim(win=win, image=img_two, pos=(self.x_val, 0))
         img_one.size *= self.img_scl
         img_two.size *= self.img_scl
-
-        fix_cros = visual.ShapeStim(win,
+        fix_cros = visual.ShapeStim(win=win,
                    vertices=((0, -self.cross_scl), (0, self.cross_scl), (0,0),
                              (-self.cross_scl,0), (self.cross_scl, 0)),
                    lineWidth=2,closeShape=False,lineColor="black")
 
-        key = 'q'
-        event.globalKeys.add(key, func=core.quit)
-
-
-        for i in range(10):
-            img_one.draw()
-            img_two.draw()
-            win.flip()
-            keyList = event.waitKeys(maxWait=2.0, keyList=['z','/'])
-            # core.wait(2.0)
-            fix_cros.draw()
-            win.flip()
-            core.wait(2.0)
-
+        img_one.draw()
+        img_two.draw()
+        win.flip()
+        keys = event.waitKeys(maxWait=2.0, keyList=["z", "slash"],timeStamped=Clock)
+        # keyList = event.waitKeys(, keyList=['z','/'], timeStamped=True)
+        # core.wait(2.0)
+        # print keys
+        fix_cros.draw()
+        win.flip()
+        core.wait(2.0)
+        return keys
 
 
 
