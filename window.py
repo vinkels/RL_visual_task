@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 # Import key parts of the PsychoPy library:
 from psychopy import visual, core, event, prefs
-import sys, csv, datetime
+import sys, csv, time
 import random as rd
 
 class session(object):
@@ -15,8 +15,9 @@ class session(object):
         self.x_val = .5
         self.cross_scl = 0.01
         self.ppn = ppn
-
+        self.date_time = time.strftime("%y%m%d%H%M")
         self.create_window()
+
 
 # Create a visual window:
     def create_window(self):
@@ -34,9 +35,13 @@ class session(object):
 
         for i in range(10):
             key_pressed = self.show_pics(img_lst[rd.randint(0,num_img-1)], img_lst[rd.randint(0,num_img-1)], win)
-            trial_lst.append([self.ppn, i, key_pressed])
-            print(trial_lst)
+            trial_lst.append([i] + key_pressed)
+            # print(trial_lst)
+
         self.show_end(win, ttl_timer)
+        win.close()
+        core.quit()
+        self.create_csv(trial_lst)
 
     # def get_ppn(self):
 
@@ -55,14 +60,18 @@ class session(object):
         img_two.draw()
         trial_tmr = core.Clock()
         win.flip()
-        keys = event.waitKeys(maxWait=0.5, keyList=["z", "slash"],timeStamped=trial_tmr)
-        print(keys)
+        keys = event.waitKeys(maxWait=1.0, keyList=["z", "slash"],timeStamped=trial_tmr)
+        # print(keys)
         fix_cros.draw()
         win.flip()
         core.wait(0.5)
-        return keys
+        if keys is not None:
+            return keys[0]
+        else:
+            return [None, None]
 
     def show_end(self, win, ttl_timer):
+        '''End slide takes window en begin time.'''
         end_txt = visual.TextStim(win=win, text='Thanks for participation!\n press key to finish test',
                         color=(1, 1, 1), colorSpace='rgb')
         end_txt.draw()
@@ -70,6 +79,12 @@ class session(object):
         event.waitKeys(maxWait=10.0,timeStamped=ttl_timer)
 
     def create_csv(self, log_lst):
-        file_name = "PPN{}_{}".format(self.ppn)
-        csv_reader = csv.write(file_name, delimiter=',')
-        with open('eggs.csv', 'rb') as csvfile:
+        ppn_form = ('0'*(2-len(str(self.ppn))))+str(self.ppn)
+        file_name = "PPN{}_{}.csv".format(ppn_form, self.date_time)
+        with open(self.out_dir+file_name, 'w') as csvfile:
+            csv_writer = csv.writer(csvfile, delimiter=',')
+            csv_writer.writerow(['phase','trial_nr','key','time', 'img_l', 'img_r'])
+
+            for row in log_lst:
+                print(row)
+                csv_writer.writerow(row)
