@@ -4,9 +4,7 @@ Visual decision task with reinforcement learning using images categorized by SC/
 
 ## Getting Started
 
-All code is created and tested with python 2.7.13.
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+All code is designed to run and tested in python 2.7.13. To be able to run the code you need all libraries mentioned in prerequisites.To run the code navigate to the directory in your terminal and run main.py (python main.py).
 
 ### Prerequisites
 
