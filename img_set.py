@@ -1,20 +1,29 @@
 import pandas as pd
 import numpy as np
-import csv
+import csv, os
 
 class img_set(object):
     def __init__(self):
-        self.BG_table, self.error_lst = self.get_type()
+        self.csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
+        self.df, self.error_lst = self.get_type()
+        self.condi_dict = self.get_imglst()
+
+        # print self.condi_dict
+
+    def get_imglst(self):
+        condi_dict = {}
+        for name in self.csv_lst:
+            temp_part = self.df.loc[self.df['condi'] == name]
+            condi_dict[name] = list(temp_part['filename'])
+        return condi_dict
 
     def get_type(self):
         BG_table = pd.read_csv('input/BG_data.csv')
-
         type_lst = [None]*len(BG_table)
         csv_dir = 'input/'
         error_lst = []
-        csv_lst = ['HIGH_A', 'HIGH_NA', 'LOW_A', 'LOW_NA', 'MED_A', 'MED_NA']
         count = 0
-        for csv_name in csv_lst:
+        for csv_name in self.csv_lst:
             with open(csv_dir+csv_name+'.csv', 'r') as csvfile:
                 csv_reader = csv.reader(csvfile, delimiter=',')
                 for row in csv_reader:
@@ -25,6 +34,14 @@ class img_set(object):
                         type_lst[int(row[0])-1] = None
 
         BG_table['condi'] = pd.Series(type_lst, index=BG_table.index)
+        print error_lst, len(error_lst)
         return BG_table, error_lst
+
+    def alt_type(self):
+        BG_table = pd.read_csv('input/BG_data.csv')
+        type_lst = [None]*len(BG_table)
+        error_lst = []
+        for value in self.csv_lst:
+            temp_list = os.listdir('images/'+value)
 
 jup = img_set()

@@ -6,7 +6,8 @@ import sys, csv, time
 import random as rd
 
 class session(object):
-    def __init__(self, ppn):
+    def __init__(self, ppn, img_lst):
+        self.img_set = img_lst
         self.w_scr = 1280
         self.h_scr = 800
         self.img_dir = 'images/'
@@ -27,14 +28,19 @@ class session(object):
         ttl_timer = core.Clock()
 
 
-        img_lst = [self.img_dir+'py1.jpeg', self.img_dir+'py2.jpeg', self.img_dir+'py3.jpeg', self.img_dir+'py4.jpeg']
-        num_img = len(img_lst)
+        # img_lst = [self.img_dir+'py1.jpeg', self.img_dir+'py2.jpeg', self.img_dir+'py3.jpeg', self.img_dir+'py4.jpeg']
+        # num_img = len(img_lst)
 
         # prefs.general['shutdownKey'] = 'q'
         event.globalKeys.add('q', func=core.quit)
-
+        lst_one = self.img_set.condi_dict[self.img_set.csv_lst[0]]
+        lst_two = self.img_set.condi_dict[self.img_set.csv_lst[1]]
+        len_one = len(lst_one)
+        len_two = len(lst_two)
         for i in range(10):
-            key_pressed = self.show_pics(img_lst[rd.randint(0,num_img-1)], img_lst[rd.randint(0,num_img-1)], win)
+            img_one = self.img_dir+self.img_set.csv_lst[0]+'/'+lst_one[rd.randint(0,len_one-1)]
+            img_two = self.img_dir+self.img_set.csv_lst[1]+'/'+lst_two[rd.randint(0,len_two-1)]
+            key_pressed = self.show_pics(img_one, img_two, win)
             trial_lst.append([i] + key_pressed)
             # print(trial_lst)
 
