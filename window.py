@@ -36,9 +36,6 @@ class window(object):
         else:
             trial_lst = self.set_two()
 
-        # end_time = core.Clock()
-        # print(end_time)
-        # tot_time = ttl_timer - end_time
         self.show_end(ttl_timer)
         trial_lst = self.create_csv(trial_lst)
         self.win.close()
@@ -125,3 +122,5 @@ class window(object):
             for row in log_lst:
                 print(row)
                 csv_writer.writerow(row)
+
+window()
