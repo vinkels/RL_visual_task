@@ -1,0 +1,16 @@
+phase,trial_nr,key,time,img_l,img_r,reward,tot_reward
+control,0,slash,0.44423508644104004,im_2364.jpg,im_5470.jpg,0,0
+control,1,z,0.4911019802093506,im_5496.jpg,im_3625.jpg,0,0
+control,2,slash,0.3128228187561035,im_3413.jpg,im_5741.jpg,0,0
+control,3,z,0.4364650249481201,im_2199.jpg,im_5475.jpg,0,0
+control,4,slash,0.5877947807312012,im_2637.jpg,im_2224.jpg,0,0
+learning,0,slash,0.8209059238433838,images/im_7434.jpg,,0,0
+learning,1,slash,0.4699380397796631,images/im_3254.jpg,,0,0
+learning,2,z,0.6311628818511963,images/im_1128.jpg,,0,0
+learning,3,slash,0.497373104095459,images/im_3095.jpg,,0,1
+learning,4,z,0.674882173538208,images/im_6417.jpg,,0,1
+test,0,slash,0.7200307846069336,im_6370.jpg,im_4697.jpg,0,1
+test,1,slash,0.2532379627227783,im_5202.jpg,im_7199.jpg,0,1
+test,2,slash,0.04393315315246582,im_2173.jpg,im_3488.jpg,0,1
+test,3,slash,0.1694180965423584,im_6603.jpg,im_708.jpg,0,1
+test,4,slash,0.4503600597381592,im_361.jpg,im_1265.jpg,0,1

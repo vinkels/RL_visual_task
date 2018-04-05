@@ -14,4 +14,5 @@ def dict_unpickle(pickle_file):
         pickle_dict = pickle.load(file)
         file.close()
     return pickle_dict
-    # pickle.load(open('pickles/{}.pickle'.format(pickle_file), 'rb'))
+
+#find . -name '*.pyc' -delete
