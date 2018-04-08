@@ -14,14 +14,10 @@ class img_sets(object):
         self.reward_val = reward_val
         self.a_size = int(self.set_size * self.part_animals)
         self.na_size = int(self.set_size - self.a_size)
-        # self.contr_ph = self.plan_phase(self.dict_one)
-        # self.learn_ph = self.plan_animal(self.dict_one)
-        # self.test_ph = self.plan_phase(self.dict_two)
-        self.random_dicts(self.dict_one, self.dict_two)
+        self.random_dicts(self.dict_one, self.dict_two, ran_num = rd.randint(0,1))
 
 
-    def random_dicts(self, dict_one, dict_two):
-        ran_num = rd.randint(0,1)
+    def random_dicts(self, dict_one, dict_two, ran_num=0):
         print(ran_num)
         if ran_num == 1:
             self.contr_ph = self.plan_phase(self.dict_one)
