@@ -7,7 +7,7 @@ import random as rd
 
 class window(object):
     def __init__(self, ppn, control_ph, learn_ph, test_ph,
-                 img_time=4.0, cross_time = 1):
+                 img_time=1.250, cross_time = 1):
         self.control_ph, self.learn_ph, self.test_ph = control_ph, learn_ph, test_ph
         self.w_scr, self.h_scr = 1280, 800
         self.trial_num = 5
@@ -30,42 +30,28 @@ class window(object):
         self.cur_reward = 0.00
 
     def create_window(self):
-
-        self.intro_window()
         self.ttl_timer = core.Clock()
+        start_data = [self.ttl_timer, 'start begin']
         event.globalKeys.add('q', func=core.quit)
+        # self.win.mouseVisible = False
         print('start demo')
         self.test_phase()
         print('start phase 1')
+        con_data = [core.Clock(), 'start control']
         con_log = self.set_two('control',self.control_ph[0], self.control_ph[1])
         print('start phase 2')
+        learn_data = [core.Clock(), 'start learning']
         learn_log = self.set_one('learning', self.learn_ph[0], self.learn_ph[1])
         print('start phase 3')
+        test_data = [core.Clock(), 'start test']
         test_log = self.set_two('test',self.test_ph[0], self.test_ph[1])
-        self.show_end()
+        self.show_instruct('exit.png')
+        trial_log = self.create_csv(start_data+con_data+con_log+learn_data+learn_log+test_data+test_log)
         self.win.close()
 
-        trial_log = self.create_csv(con_log + learn_log + test_log)
-        core.quit()
-
-
-
-    def intro_window(self):
-        # # end_txt = visual.TextStim(win=self.win, text='This task exists of 3 parts in which \
-        #                           you have to press either the [z] or [/] key. \n Press key'+
-        #                           ' to start demo', color=(1, 1, 1), colorSpace='rgb')
-
-        intro_txt = visual.ImageStim(win=self.win, image='images/instruct/text_test.png',pos=(0,0))
-        intro_txt.size *= self.txt_scl
-        intro_txt.draw()
-        self.win.flip()
-        event.waitKeys()
-        instruct_txt = visual.ImageStim(win=self.win, image='images/instruct/demo.png',pos=(0,0))
-        instruct_txt.draw()
-        self.win.flip()
-        event.waitKeys()
-
     def test_phase(self):
+        self.show_instruct('intro.png')
+        self.show_instruct('demo.png')
         test_left = ['test/im_571.jpg', 'test/im_2158.jpg']
         test_right = ['test/im_6664.jpg', 'test/im_303.jpg']
         for idx, val in enumerate(test_left):
@@ -76,14 +62,15 @@ class window(object):
         test_a = ['test/im_303.jpg', 'test/im_6664.jpg']
         reward_a = [5, 0]
         for idx, val in enumerate(test_a):
-            # img = self.show_pics(self.img_dir+val, self.img_dir+test_right[idx])
             keys, reward = self.show_animal(self.img_dir+test_a[idx], reward_a[idx])
             key_pressed, reward = self.get_score(keys, reward)
-        instruct_txt = visual.ImageStim(win=self.win, image='images/instruct/end_demo.png',pos=(0,0))
-        instruct_txt.draw()
+        self.show_instruct('end_demo.png')
+
+    def show_instruct(self, file_path):
+        in_txt = visual.ImageStim(win=self.win, image='images/instruct/'+file_path, pos=(0,0))
+        in_txt.draw()
         self.win.flip()
         event.waitKeys()
-
 
     def show_key(self, key):
         if key[0] is None:
@@ -94,7 +81,16 @@ class window(object):
                                     color=(1, 1, 1), colorSpace='rgb')
 
 
-
+    def warning_window(self, img_num):
+        if img_num == 1:
+            warn_img = 'images/instruct/warning_one.png'
+        else:
+            warn_img = 'images/instruct/warning_two.png'
+        warn_txt = visual.ImageStim(win=self.win, image=warn_img, pos=(0,0))
+        warn_txt.draw()
+        self.win.flip()
+        core.wait(0.5)
+        return True
 
     def set_two(self, phase, lst_one, lst_two):
 
@@ -102,7 +98,6 @@ class window(object):
 
         for i in range(self.trial_num):
             ran_num = rd.randint(0, 1)
-            # name_one, name_two = lst_one[rd.randint(0,len_one-1)], lst_two[rd.randint(0,len_two-1)]
             if ran_num == 1:
                 img_one = lst_one[i]
                 img_two = lst_two[i]
@@ -111,8 +106,10 @@ class window(object):
                 img_two = lst_one[i]
 
             keys = self.show_pics(self.img_dir+img_one, self.img_dir+img_two)
+            if keys == None:
+                self.warning_window(2)
             key_pressed = self.get_cross(keys)
-            trial_lst.append([phase, i, key_pressed[0], key_pressed[1], img_one, img_two,
+            trial_lst.append([self.ttl_timer,phase, i, key_pressed[0], key_pressed[1], img_one, img_two,
                              0.00, self.cur_reward])
         return trial_lst
 
@@ -124,7 +121,7 @@ class window(object):
             img_one = self.img_dir+list_one[i]
             keys, reward = self.show_animal(img_one, list_reward[i])
             key_pressed, reward = self.get_score(keys, reward)
-            trial_lst.append([phase, i, key_pressed[0], key_pressed[1], img_one, None,
+            trial_lst.append([self.ttl_timer,phase, i, key_pressed[0], key_pressed[1], img_one, None,
                              reward, self.cur_reward])
         return trial_lst
 
@@ -136,7 +133,6 @@ class window(object):
         trial_tmr = core.Clock()
         self.win.flip()
         keys = event.waitKeys(maxWait=self.img_time, keyList=["z", "slash"],timeStamped=trial_tmr)
-
         return keys, reward
 
 
@@ -158,7 +154,6 @@ class window(object):
             get_reward = 0
 
         self.cur_reward += get_reward
-
 
         stim1 = visual.TextStim(self.win, 'reward: ' +str(get_reward/100)+' euros',
            color=col, pos=(0,0))
@@ -183,6 +178,7 @@ class window(object):
             keys = [None, None]
         return keys
 
+
     def show_pics(self, img_one, img_two):
 
         img_one = visual.ImageStim(win=self.win, image=img_one,pos=(-self.x_val,0))
@@ -197,23 +193,16 @@ class window(object):
         return keys
 
 
-
-    def show_end(self):
-        '''End slide takes window en begin time.'''
-        end_txt = visual.TextStim(win=self.win, text='Thanks for participation!\n press key to finish test',
-                        color=(1, 1, 1), colorSpace='rgb')
-        end_txt.draw()
-        self.win.flip()
-        event.waitKeys(maxWait=10.0,timeStamped=self.ttl_timer)
-
     def create_csv(self, log_lst):
+
         ppn_form = ('0'*(2-len(str(self.ppn))))+str(self.ppn)
         file_name = "PPN{}_{}.csv".format(ppn_form, self.date_time)
         with open(self.out_dir+file_name, 'w') as csvfile:
             csv_writer = csv.writer(csvfile, delimiter=',')
-            csv_writer.writerow(['phase','trial_nr','key','time', 'img_l', 'img_r', 'reward', 'tot_reward'])
+            csv_writer.writerow(['time_stamp','phase','trial_nr','key','RT', 'img_l', 'img_r', 'reward', 'tot_reward'])
 
             for row in log_lst:
                 csv_writer.writerow(row)
+        return True
 
 # window()

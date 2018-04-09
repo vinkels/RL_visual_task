@@ -1,4 +1,5 @@
 from __future__ import absolute_import, division, print_function
+from psychopy import core
 from window import window
 from img_sets import img_sets
 from get_img import get_img
@@ -29,6 +30,7 @@ def main():
         cur_ses = window(ppn=ppn, control_ph=set.contr_ph, learn_ph=set.learn_ph,
                          test_ph=set.test_ph)
         cur_ses.create_window()
+        core.quit()
     else:
         print("reward scheme does not exist")
 
