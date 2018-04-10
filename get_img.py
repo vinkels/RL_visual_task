@@ -24,9 +24,7 @@ class get_img(object):
             with open(self.csv_path+value+'.csv') as csvfile:
                 csv_read = csv.reader(csvfile, delimiter=',')
                 for row in csv_read:
-                    # print(row)
                     BG_table.loc[BG_table['filename'] == row[0], 'condition'] = value
-                # csv_read.close()
         return BG_table
 
 
@@ -40,7 +38,6 @@ class get_img(object):
             for img in type_files:
                 BG_table.loc[BG_table['filename'] == img, 'condition'] = value
                 count += 1
-        print(BG_table)
         return BG_table
 
     def sort_sets(self):
@@ -62,7 +59,7 @@ class get_img(object):
             print(key, len(temp_one), len(temp_two))
             dict_one[key] = temp_one
             dict_two[key] = temp_two
-            
+
         return dict_one, dict_two
 
 # csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']

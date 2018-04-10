@@ -18,7 +18,7 @@ class img_sets(object):
 
 
     def random_dicts(self, dict_one, dict_two, ran_num=0):
-        print(ran_num)
+        # print(ran_num)
         if ran_num == 1:
             self.contr_ph = self.plan_phase(self.dict_one)
             self.learn_ph = self.plan_animal(self.dict_one)
@@ -30,29 +30,30 @@ class img_sets(object):
 
 
     def plan_animal(self, unshuf_dict):
-        type_list = ['LOW_A', 'MED_A', 'HIGH_A']
-        # rd.shuffle(self.reward_val)
-        # print(unshuf_dict)
-        img_lst, val_lst = [], []
-        # rd.shuffle(val_list)
-        # print(val_lst)
-        # val_list[0], val_list[1], val_list[2] = val_list[0], val_list[1], val_list[2]
+
+        type_list = ['LOW', 'MED', 'HIGH']
+        img_lst, val_lst, a_lst = [], [], []
+
         samp_num = self.na_size
         for value in self.csv_lst:
-            # print(unshuf_dict[value])
-            # print(rd.sample(unshuf_dict[value], samp_num))
-            # print(img_lst)
-            img_lst += rd.sample(unshuf_dict[value], samp_num)
-            try:
-                val_lst += ([self.reward_val[type_list.index(value)]]*samp_num)
-            except:
-                val_lst += ([0]*samp_num)
-        img_lst, val_lst = self.shuffle_lists(img_lst, val_lst)
-        print(val_lst)
-        return [img_lst, val_lst]
+            for idx, name in enumerate(type_list):
+                if value.startswith(name):
+
+                    img_lst += rd.sample(unshuf_dict[value], samp_num)
+                    val_lst += ([self.reward_val[idx]]*samp_num)
+                    if value.endswith('NA'):
+                        a_lst += [0]*samp_num
+                    else:
+                        a_lst += [1]*samp_num
+
+                        break
+        tot_lst = [img_lst, val_lst, a_lst]
+        [img_lst, val_lst, a_lst] = self.shuffle_lists(tot_lst)
+        return [img_lst, val_lst, a_lst]
 
     def plan_phase(self, unshuf_dict):
 
+        a_lst = []
         set_dict = {}
         set_list = ['lm', 'lh', 'mh']
         shuf_dict = cp.deepcopy(unshuf_dict)
@@ -60,30 +61,37 @@ class img_sets(object):
         for key in shuf_dict:
             rd.shuffle(shuf_dict[key])
 
-        low_lm, med_lm = self.get_shuffled(shuf_dict, 'LOW', 'MED')
-        low_lh, high_lh = self.get_shuffled(shuf_dict, 'LOW', 'HIGH')
-        med_mh, high_mh = self.get_shuffled(shuf_dict, 'MED', 'HIGH')
+        low_lm, med_lm, a_lm = self.get_shuffled(shuf_dict, 'LOW', 'MED')
+        low_lh, high_lh, a_lh = self.get_shuffled(shuf_dict, 'LOW', 'HIGH')
+        med_mh, high_mh, a_mh = self.get_shuffled(shuf_dict, 'MED', 'HIGH')
 
-        list_one = low_lm + low_lh + med_mh
-        list_two = med_lm + high_lh + high_mh
-
-        one_shuf, two_shuf = self.shuffle_lists(list_one, list_two)
-
-        return [one_shuf, two_shuf]
+        list_one = low_lm + high_lh + med_mh
+        list_two = med_lm + low_lh + high_mh
+        list_a = a_lm + a_lh + a_mh
+        list_tot = [list_one, list_two, list_a]
+        one_shuf, two_shuf, a_shuf = self.shuffle_lists(list_tot)
+        # print(one_shuf, two_shuf, a_shuf)
+        return [one_shuf, two_shuf, a_shuf]
 
     def get_shuffled(self, shuf_dict, type_one, type_two):
         lst_one = (rd.sample(shuf_dict['{}_NA'.format(type_one)], self.na_size) +
                   rd.sample(shuf_dict['{}_A'.format(type_one)], self.a_size))
         lst_two = (rd.sample(shuf_dict['{}_NA'.format(type_two)], self.na_size) +
                   rd.sample(shuf_dict['{}_A'.format(type_two)], self.a_size))
-        lst_one, lst_two = self.shuffle_lists(lst_one, lst_two)
-        return lst_one, lst_two
+        lst_a = [0]*self.na_size+[1]*self.a_size
+        lst_tot = [lst_one, lst_two, lst_a]
+        [lst_one, lst_two, lst_a] = self.shuffle_lists(lst_tot)
+        return lst_one, lst_two, lst_a
 
-    def shuffle_lists(self, lst_one, lst_two):
-        zip_lst = list(zip(lst_one, lst_two))
-        rd.shuffle(zip_lst)
-        lst_one, lst_two = zip(*zip_lst)
-        return lst_one, lst_two
+    def shuffle_lists(self, lst_lsts):
+        shuf_lsts = []
+        list_shuf = list(range(len(lst_lsts[0])))
+        rd.shuffle(list_shuf)
+        for lst in lst_lsts:
+            temp_lst = [lst[idx] for idx in list_shuf]
+            shuf_lsts.append(temp_lst)
+
+        return shuf_lsts
 
 # csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
 # img_sets(csv_lst,reward_val=(5,3,1))

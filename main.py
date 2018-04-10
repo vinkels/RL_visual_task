@@ -1,6 +1,6 @@
 from __future__ import absolute_import, division, print_function
 from psychopy import core
-from window import window
+from session import session
 from img_sets import img_sets
 from get_img import get_img
 import helpers as hp
@@ -27,13 +27,13 @@ def main():
 
     if rwrd >= 0 and rwrd < 6:
         set = img_sets(csv_lst=csv_lst, reward_val=reward_schemes[rwrd])
-        cur_ses = window(ppn=ppn, control_ph=set.contr_ph, learn_ph=set.learn_ph,
+        cur_ses = session(ppn=ppn, control_ph=set.contr_ph, learn_ph=set.learn_ph,
                          test_ph=set.test_ph)
         cur_ses.create_window()
         core.quit()
     else:
         print("reward scheme does not exist")
 
-    # hp.del_pyc()
+    hp.del_pyc()
 
 main()
