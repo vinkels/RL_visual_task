@@ -10,7 +10,7 @@ class session(object):
         self.c_ph, self.l_ph, self.t_ph, self.demo_ph = control_ph, learn_ph, test_ph, demo_ph
         self.w_scr, self.h_scr = 1280, 800
         self.trial_num = 5
-        self.img_dir = 'images/'
+        self.img_dir = 'images/task/'
         self.out_dir = 'output/sessions/'
         self.img_scl = 0.8
         self.x_val = 0.5

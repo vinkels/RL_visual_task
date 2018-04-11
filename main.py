@@ -2,11 +2,11 @@ from __future__ import absolute_import, division, print_function
 from psychopy import core
 from session import session
 from img_sets import img_sets
-from img_prep.get_img import get_img
+# from img_prep.get_img import get_img
 import helpers as hp
 import itertools, os
-from img_prep.test import test
-from img_prep.test_img import test_img
+# from img_prep.test import test
+# from img_prep.test_img import test_img
 
 
 

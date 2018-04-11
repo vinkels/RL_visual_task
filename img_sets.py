@@ -19,7 +19,7 @@ class img_sets(object):
 
 
     def random_dicts(self, dict_one, dict_two, ran_num=0):
-        self.demo_ph = self.plan_demo(self.demo_dict)
+        self.demo_ph = self.plan_demo()
         if ran_num == 1:
             self.contr_ph = self.plan_phase(self.dict_one)
             self.learn_ph = self.plan_animal(self.dict_one)
@@ -95,13 +95,13 @@ class img_sets(object):
         return shuf_lsts
 
     def plan_demo(self):
-        a_len = len(self.demo_dict['A'])/2
-        na_len = len(self.demo_dict['NA'])/2
+        a_len = len(self.demo_dict['A'])//2
+        na_len = len(self.demo_dict['NA'])//2
         l_lst = [self.demo_dict['NA'][:na_len]+self.demo_dict['A'][:a_len]]
         r_lst = [self.demo_dict['NA'][na_len:]+self.demo_dict['A'][a_len:]]
         a_lst = [[0]*na_len + [1]*a_len]
         rwd_lst = [1]*len(l_lst)
-        [l_shuf, r_shuf, a_shuf] = self.shuffle_lists = [l_lst,r_lst,a_lst]
+        [l_shuf, r_shuf, a_shuf] = self.shuffle_lists([l_lst,r_lst,a_lst])
         return [l_shuf, r_shuf, a_shuf, rwd_lst]
 
 
