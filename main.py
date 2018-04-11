@@ -2,12 +2,16 @@ from __future__ import absolute_import, division, print_function
 from psychopy import core
 from session import session
 from img_sets import img_sets
-from get_img import get_img
+from img_prep.get_img import get_img
 import helpers as hp
 import itertools, os
+from img_prep.test import test
+from img_prep.test_img import test_img
+
 
 
 def main():
+
     csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
 
     ppn_input = input("ppn: ")
@@ -28,7 +32,7 @@ def main():
     if rwrd >= 0 and rwrd < 6:
         set = img_sets(csv_lst=csv_lst, reward_val=reward_schemes[rwrd])
         cur_ses = session(ppn=ppn, control_ph=set.contr_ph, learn_ph=set.learn_ph,
-                         test_ph=set.test_ph)
+                         test_ph=set.test_ph, demo_ph=set.demo_ph)
         cur_ses.create_window()
         # print('dit gaat dus goed')
         core.quit()

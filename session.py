@@ -5,9 +5,9 @@ import random as rd
 
 
 class session(object):
-    def __init__(self, ppn, control_ph, learn_ph, test_ph,
+    def __init__(self, ppn, control_ph, learn_ph, test_ph, demo_ph,
                  img_time=1.250, cross_time = 1, a_time = 0.1):
-        self.c_ph, self.l_ph, self.t_ph = control_ph, learn_ph, test_ph
+        self.c_ph, self.l_ph, self.t_ph, self.demo_ph = control_ph, learn_ph, test_ph, demo_ph
         self.w_scr, self.h_scr = 1280, 800
         self.trial_num = 5
         self.img_dir = 'images/'
@@ -27,21 +27,8 @@ class session(object):
     def create_window(self):
 
 
-        # root = tk.Tk()
-        #
-        # screen_width = root.winfo_screenwidth()
-        # screen_height = root.winfo_screenheight()
-        # print(screen_width, screen_height)
-        # print(os.system("xrandr  | grep \* | cut -d' ' -f4"))
-
-        # for m in get_monitors():
-        #     print(str(m))
-        # app = wx.App(False) # the wx.App object must be created first.
-        # print(wx.GetDisplaySize())
-        # print('kom ik hier')
-        # return True
         self.ttl_timer = datetime.datetime.now()
-        self.win = visual.Window(size=(self.w_scr, self.h_scr),fullscr=True,
+        self.win = visual.Window(size=(self.w_scr, self.h_scr),screen=0,fullscr=False,
                                  monitor='testMonitor')
         self.fix_cros = visual.ShapeStim(win=self.win, vertices=((0, -self.cross_scl),
                                         (0, self.cross_scl), (0,0),(-self.cross_scl,0),
@@ -53,7 +40,6 @@ class session(object):
         # self.win.mouseVisible = False
         print('start demo')
         self.test_phase()
-        self.win.flip()
         print('start phase 1')
         con_data = [str(datetime.datetime.now() - self.ttl_timer), 'start control']
         con_log = self.set_two('control',self.c_ph)
@@ -72,18 +58,9 @@ class session(object):
     def test_phase(self):
         self.show_instruct('intro.png')
         self.show_instruct('demo.png')
-    #     test_left = ['test/im_571.jpg', 'test/im_2158.jpg']
-    #     test_right = ['test/im_6664.jpg', 'test/im_303.jpg']
-    #     for idx, val in enumerate(test_left):
-    #         keys = self.show_pics(self.img_dir+test_left[idx], self.img_dir+test_right[idx])
-    #         key_pressed = self.get_cross(keys=keys)
-    #
-    #     test_a = ['test/im_303.jpg', 'test/im_6664.jpg']
-    #     reward_a = [5, 0]
-    #     for idx, val in enumerate(test_a):
-    #         keys, reward = self.show_animal(self.img_dir+test_a[idx], reward_a[idx])
-    #         key_pressed, reward = self.get_score(keys, reward)
-    #     self.show_instruct('end_demo.png')
+
+
+        self.show_instruct('end_demo.png')
     #
 
     def show_instruct(self, file_path):
@@ -91,16 +68,6 @@ class session(object):
         in_txt.draw()
         self.win.flip()
         event.waitKeys()
-    #
-    #
-    # def warning_window(self):
-    #
-    #     warn_img = 'images/instruct/warning_two.png'
-    #     warn_txt = visual.ImageStim(win=self.win, image=warn_img, pos=(0,0))
-    #     warn_txt.draw()
-    #     self.win.flip()
-    #     core.wait(0.5)
-    #     return True
 
     def set_two(self, phase, img_set):
         trial_lst = []

@@ -18,6 +18,9 @@ All external libraries needed can be found in requirements.txt. To install requi
 ```
 pip install requirements-txt
 ```
+### project structure
+All scripts used for preprocessing of images are located in the img_prep folder. These scripts are not always python2.7 compatible and are not needed to run the experiment.
+
 
 ### Running
 download complete repository and navigate to repository in terminal.

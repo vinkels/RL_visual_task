@@ -9,6 +9,7 @@ class img_sets(object):
         self.csv_lst = csv_lst
         self.dict_one = hp.dict_unpickle('dict_one')
         self.dict_two = hp.dict_unpickle('dict_two')
+        self.demo_dict = hp.dict_unpickle('demo_dict')
         self.set_size = 100
         self.part_animals = 0.5
         self.reward_val = reward_val
@@ -18,7 +19,7 @@ class img_sets(object):
 
 
     def random_dicts(self, dict_one, dict_two, ran_num=0):
-        # print(ran_num)
+        self.demo_ph = self.plan_demo(self.demo_dict)
         if ran_num == 1:
             self.contr_ph = self.plan_phase(self.dict_one)
             self.learn_ph = self.plan_animal(self.dict_one)
@@ -70,7 +71,7 @@ class img_sets(object):
         list_a = a_lm + a_lh + a_mh
         list_tot = [list_one, list_two, list_a]
         one_shuf, two_shuf, a_shuf = self.shuffle_lists(list_tot)
-        # print(one_shuf, two_shuf, a_shuf)
+
         return [one_shuf, two_shuf, a_shuf]
 
     def get_shuffled(self, shuf_dict, type_one, type_two):
@@ -92,6 +93,17 @@ class img_sets(object):
             shuf_lsts.append(temp_lst)
 
         return shuf_lsts
+
+    def plan_demo(self):
+        a_len = len(self.demo_dict['A'])/2
+        na_len = len(self.demo_dict['NA'])/2
+        l_lst = [self.demo_dict['NA'][:na_len]+self.demo_dict['A'][:a_len]]
+        r_lst = [self.demo_dict['NA'][na_len:]+self.demo_dict['A'][a_len:]]
+        a_lst = [[0]*na_len + [1]*a_len]
+        rwd_lst = [1]*len(l_lst)
+        [l_shuf, r_shuf, a_shuf] = self.shuffle_lists = [l_lst,r_lst,a_lst]
+        return [l_shuf, r_shuf, a_shuf, rwd_lst]
+
 
 # csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
 # img_sets(csv_lst,reward_val=(5,3,1))
