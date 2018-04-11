@@ -30,6 +30,7 @@ def main():
         cur_ses = session(ppn=ppn, control_ph=set.contr_ph, learn_ph=set.learn_ph,
                          test_ph=set.test_ph)
         cur_ses.create_window()
+        # print('dit gaat dus goed')
         core.quit()
     else:
         print("reward scheme does not exist")
