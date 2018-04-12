@@ -21,7 +21,6 @@ class img_sets(object):
 
     def random_dicts(self, dict_one, dict_two, ran_num=0):
         self.demo_ph = self.plan_demo()
-        print(self.demo_ph)
         if ran_num == 1:
             self.contr_ph = self.plan_phase(self.dict_one)
             self.learn_ph = self.plan_animal(self.dict_one)
@@ -96,9 +95,10 @@ class img_sets(object):
         return shuf_lsts
 
     def plan_demo(self):
-        a_len = len(self.demo_dict['A'])//2
-        na_len = len(self.demo_dict['NA'])//2
-        r_num =round(self.demo_num/2)
+        a_len = len(self.demo_dict['A'])/2
+        na_len = len(self.demo_dict['NA'])/2
+        r_num =int(self.demo_num/2)
+        print(r_num)
         a_lst = rd.sample(self.demo_dict['A'], self.demo_num)
         na_lst = rd.sample(self.demo_dict['NA'], self.demo_num)
         l_lst = na_lst[:r_num]+a_lst[r_num:]
@@ -109,5 +109,5 @@ class img_sets(object):
         return [l_shuf, r_shuf, a_shuf, rwd_lst]
 
 
-# csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
-# img_sets(csv_lst,reward_val=(5,3,1))
+csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
+img_sets(csv_lst,reward_val=(5,3,1))

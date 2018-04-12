@@ -8,7 +8,7 @@ except:
 
 def dict_pickle(dict, name):
     with open('pickles/{}.pickle'.format(name), 'wb') as handle:
-        pickle.dump(dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(dict, handle, protocol=2)
         handle.close()
 
 def dict_unpickle(pickle_file):

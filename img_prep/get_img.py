@@ -51,5 +51,5 @@ class get_img(object):
 
         return dict_one, dict_two
 
-# csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
-# img_set(csv_lst)
+csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
+img_set(csv_lst)
