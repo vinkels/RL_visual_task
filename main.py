@@ -6,12 +6,11 @@ from img_sets import img_sets
 import helpers as hp
 import itertools, os
 # from img_prep.test import test
-# from img_prep.test_img import test_img
+from img_prep.test_img import test_img
 
 
 
 def main():
-
     csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
 
     ppn_input = input("ppn: ")

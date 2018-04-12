@@ -5,7 +5,8 @@ import copy as cp
 
 
 class img_sets(object):
-    def __init__(self, csv_lst, reward_val=(0,0,0)):
+    def __init__(self, csv_lst, reward_val=(0,0,0),demo_num=30):
+        self.demo_num = demo_num
         self.csv_lst = csv_lst
         self.dict_one = hp.dict_unpickle('dict_one')
         self.dict_two = hp.dict_unpickle('dict_two')
@@ -20,6 +21,7 @@ class img_sets(object):
 
     def random_dicts(self, dict_one, dict_two, ran_num=0):
         self.demo_ph = self.plan_demo()
+        print(self.demo_ph)
         if ran_num == 1:
             self.contr_ph = self.plan_phase(self.dict_one)
             self.learn_ph = self.plan_animal(self.dict_one)
@@ -28,7 +30,6 @@ class img_sets(object):
             self.contr_ph = self.plan_phase(self.dict_two)
             self.learn_ph = self.plan_animal(self.dict_two)
             self.test_ph = self.plan_phase(self.dict_one)
-
 
     def plan_animal(self, unshuf_dict):
 
@@ -97,10 +98,13 @@ class img_sets(object):
     def plan_demo(self):
         a_len = len(self.demo_dict['A'])//2
         na_len = len(self.demo_dict['NA'])//2
-        l_lst = [self.demo_dict['NA'][:na_len]+self.demo_dict['A'][:a_len]]
-        r_lst = [self.demo_dict['NA'][na_len:]+self.demo_dict['A'][a_len:]]
-        a_lst = [[0]*na_len + [1]*a_len]
-        rwd_lst = [1]*len(l_lst)
+        r_num =round(self.demo_num/2)
+        a_lst = rd.sample(self.demo_dict['A'], self.demo_num)
+        na_lst = rd.sample(self.demo_dict['NA'], self.demo_num)
+        l_lst = na_lst[:r_num]+a_lst[r_num:]
+        r_lst = na_lst[r_num:]+a_lst[:r_num]
+        a_lst = [0]*r_num + [1]*r_num
+        rwd_lst = [3]*len(l_lst)
         [l_shuf, r_shuf, a_shuf] = self.shuffle_lists([l_lst,r_lst,a_lst])
         return [l_shuf, r_shuf, a_shuf, rwd_lst]
 

@@ -22,7 +22,7 @@ class test_img():
             csv_read = csv.reader(csvfile, delimiter=',')
             idx = 0
             for idx, row in enumerate(csv_read):
-                if row[12] == '':
+                if row[12] == '' and int(row[1].strip('.jpg').strip('im_')) < 8401:
                     if row[8] == '1.0':
                         a_lst.append(row[1])
                     elif row[8] == '0.0':

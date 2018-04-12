@@ -9,7 +9,8 @@ class session(object):
                  img_time=1.250, cross_time = 1, a_time = 0.1):
         self.c_ph, self.l_ph, self.t_ph, self.demo_ph = control_ph, learn_ph, test_ph, demo_ph
         self.w_scr, self.h_scr = 1280, 800
-        self.trial_num = 5
+        self.trial_num = 300
+        self.demo_dir = 'images/demo/'
         self.img_dir = 'images/task/'
         self.out_dir = 'output/sessions/'
         self.img_scl = 0.8
@@ -42,13 +43,13 @@ class session(object):
         self.test_phase()
         print('start phase 1')
         con_data = [str(datetime.datetime.now() - self.ttl_timer), 'start control']
-        con_log = self.set_two('control',self.c_ph)
+        con_log = self.set_two('control',self.c_ph, self.trial_num)
         print('start phase 2')
         learn_data = [str(datetime.datetime.now() - self.ttl_timer), 'start learning']
-        learn_log = self.set_one(self.l_ph)
+        learn_log = self.set_one('learning',self.l_ph, self.trial_num)
         print('start phase 3')
         test_data = [str(datetime.datetime.now() - self.ttl_timer), 'start test']
-        test_log = self.set_two('test',self.t_ph)
+        test_log = self.set_two('test',self.t_ph, self.trial_num)
         self.show_instruct('exit.png')
         trial_log = self.create_csv([[start_data]+[con_data]+con_log+[learn_data]+learn_log
                                      +[test_data]+test_log])
@@ -56,10 +57,13 @@ class session(object):
 
 
     def test_phase(self):
+        demo_two = [self.demo_ph[0], self.demo_ph[1], self.demo_ph[2]]
+        demo_one = [self.demo_ph[0], self.demo_ph[3],self.demo_ph[2]]
         self.show_instruct('intro.png')
-        self.show_instruct('demo.png')
-
-
+        self.show_instruct('demo_two.png')
+        self.set_two('demo_two', demo_two, 10)
+        self.show_instruct('demo_one.png')
+        self.set_one('demo_one', demo_one, 10)
         self.show_instruct('end_demo.png')
     #
 
@@ -69,10 +73,14 @@ class session(object):
         self.win.flip()
         event.waitKeys()
 
-    def set_two(self, phase, img_set):
+    def set_two(self, phase, img_set, reps):
         trial_lst = []
+        if phase.startswith('demo'):
+            im_dir = self.demo_dir
+        else:
+            im_dir = self.img_dir
 
-        for i in range(self.trial_num):
+        for i in range(reps):
             ran_num = rd.randint(0, 1)
             if ran_num == 1:
                 img_one = img_set[0][i]
@@ -81,8 +89,9 @@ class session(object):
                 img_one = img_set[1][i]
                 img_two = img_set[0][i]
 
-            img_l = visual.ImageStim(win=self.win, image=self.img_dir+img_one,pos=(-self.x_val,0))
-            img_r = visual.ImageStim(win=self.win, image=self.img_dir+img_two, pos=(self.x_val, 0))
+
+            img_l = visual.ImageStim(win=self.win, image=im_dir+img_one,pos=(-self.x_val,0))
+            img_r = visual.ImageStim(win=self.win, image=im_dir+img_two, pos=(self.x_val, 0))
             img_l.size *= self.img_scl
             img_r.size *= self.img_scl
             img_l.draw()
@@ -104,32 +113,36 @@ class session(object):
                               key_name[0], key_name[1], img_one, img_two,0, 0])
         return trial_lst
 
-    def set_one(self, img_lst):
+    def set_one(self, phase, img_lst, reps):
 
         trial_lst = []
+        if phase.startswith('demo'):
+            im_dir = self.demo_dir
+        else:
+            im_dir = self.img_dir
 
-        for i in range(self.trial_num):
+        for i in range(reps):
 
-            img_nm, img_rw, img_a = self.img_dir+img_lst[0][i], img_lst[1][i], img_lst[2][i]
+            img_nm, img_rw, img_a = im_dir+img_lst[0][i], img_lst[1][i], img_lst[2][i]
             img_show = visual.ImageStim(win=self.win, image=img_nm,pos=(0,0))
             img_show.size *= self.img_scl
             img_show.draw()
             self.win.flip()
             core.wait(0.1)
-            stim_l = visual.TextStim(self.win, 'animal',
+            stim_l = visual.TextStim(self.win, 'no animal',
                color='white', pos=(-0.6,-0.6))
-            stim_r = visual.TextStim(self.win, 'no animal',
+            stim_r = visual.TextStim(self.win, 'animal',
                color='white', pos=(0.6,-0.6))
             stim_l.draw()
             stim_r.draw()
             trial_tmr = core.Clock()
             self.win.flip()
             keys = event.waitKeys(maxWait=1.150, keyList=["z", "slash"],timeStamped=trial_tmr)
-
+            print(keys, img_a)
             get_reward, col = 0, 'white'
             try:
                 key = keys[0]
-                if (key[0] == 'slash' and img_a == 0) or (key[0][0] == 'z' and img_a == 1):
+                if (key[0] == 'z' and img_a == 0) or (key[0] == 'slash' and img_a == 1):
                     get_reward = img_rw
                     col = 'green'
                 else:
@@ -149,7 +162,7 @@ class session(object):
             stim2.draw()
             self.win.flip()
 
-            trial_lst.append([str(datetime.datetime.now() - self.ttl_timer),'learning', i, img_lst[2][i],
+            trial_lst.append([str(datetime.datetime.now() - self.ttl_timer),phase, i, img_lst[2][i],
                               key[0],key[1], img_nm, img_rw,get_reward, self.cur_reward])
 
             core.wait(0.5)
