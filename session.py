@@ -29,7 +29,7 @@ class session(object):
 
 
         self.ttl_timer = datetime.datetime.now()
-        self.win = visual.Window(size=(self.w_scr, self.h_scr),screen=0,fullscr=False,
+        self.win = visual.Window(size=(self.w_scr, self.h_scr),fullscr=True,
                                  monitor='testMonitor')
         self.fix_cros = visual.ShapeStim(win=self.win, vertices=((0, -self.cross_scl),
                                         (0, self.cross_scl), (0,0),(-self.cross_scl,0),
@@ -38,7 +38,7 @@ class session(object):
 
         start_data = [str(self.ttl_timer), 'start begin']
         event.globalKeys.add('q', func=core.quit)
-        # self.win.mouseVisible = False
+        self.win.mouseVisible = False
         print('start demo')
         self.test_phase()
         print('start phase 1')

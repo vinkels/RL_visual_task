@@ -8,6 +8,7 @@ import itertools, os
 
 
 def main():
+    hp.del_pyc()
     csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
 
     ppn_input = input("ppn: ")
@@ -35,6 +36,6 @@ def main():
     else:
         print("reward scheme does not exist")
 
-    hp.del_pyc()
+
 
 main()
