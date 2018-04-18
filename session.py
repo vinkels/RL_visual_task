@@ -23,6 +23,7 @@ class session(object):
         self.img_time = img_time
         self.cross_time = cross_time
         self.cur_reward = 0
+        self.trial_lst = []
 
 
     def create_window(self):
@@ -37,22 +38,23 @@ class session(object):
                                          lineColor="black")
 
         start_data = [str(self.ttl_timer), 'start begin']
-        event.globalKeys.add('q', func=core.quit)
+        event.globalKeys.add('q', func=self.quit_q)
         self.win.mouseVisible = False
         print('start demo')
         self.test_phase()
         print('start phase 1')
-        con_data = [str(datetime.datetime.now() - self.ttl_timer), 'start control']
+        self.trial_lst.append([str(datetime.datetime.now() - self.ttl_timer), 'start control'])
         con_log = self.set_two('control',self.c_ph, self.trial_num)
         print('start phase 2')
-        learn_data = [str(datetime.datetime.now() - self.ttl_timer), 'start learning']
+        self.trial_lst.append([str(datetime.datetime.now() - self.ttl_timer), 'start learning'])
         learn_log = self.set_one('learning',self.l_ph, self.trial_num)
         print('start phase 3')
-        test_data = [str(datetime.datetime.now() - self.ttl_timer), 'start test']
+        self.trial_lst.append([str(datetime.datetime.now() - self.ttl_timer), 'start test'])
         test_log = self.set_two('test',self.t_ph, self.trial_num)
         self.show_instruct('exit.png')
-        trial_log = self.create_csv([[start_data]+[con_data]+con_log+[learn_data]+learn_log
-                                     +[test_data]+test_log])
+        self.create_csv()
+        # trial_log = self.create_csv([[start_data]+[con_data]+con_log+[learn_data]+learn_log
+                                     # +[test_data]+test_log])
         self.win.close()
 
 
@@ -64,6 +66,7 @@ class session(object):
         self.set_two('demo_two', demo_two, 10)
         self.show_instruct('demo_one.png')
         self.set_one('demo_one', demo_one, 10)
+        self.cur_reward = 0
         self.show_instruct('end_demo.png')
     #
 
@@ -74,7 +77,7 @@ class session(object):
         event.waitKeys()
 
     def set_two(self, phase, img_set, reps):
-        trial_lst = []
+        # trial_lst = []
         if phase.startswith('demo'):
             im_dir = self.demo_dir
         else:
@@ -109,13 +112,13 @@ class session(object):
             else:
                 key_name = keys[0]
             self.get_cross()
-            trial_lst.append([str(datetime.datetime.now() - self.ttl_timer),phase, i, img_set[2][i],
+            self.trial_lst.append([str(datetime.datetime.now() - self.ttl_timer),phase, i, img_set[2][i],
                               key_name[0], key_name[1], img_one, img_two,0, 0])
-        return trial_lst
+        # return trial_lst
 
     def set_one(self, phase, img_lst, reps):
 
-        trial_lst = []
+        # trial_lst = []
         if phase.startswith('demo'):
             im_dir = self.demo_dir
         else:
@@ -162,14 +165,14 @@ class session(object):
             stim2.draw()
             self.win.flip()
 
-            trial_lst.append([str(datetime.datetime.now() - self.ttl_timer),phase, i, img_lst[2][i],
+            self.trial_lst.append([str(datetime.datetime.now() - self.ttl_timer),phase, i, img_lst[2][i],
                               key[0],key[1], img_nm, img_rw,get_reward, self.cur_reward])
 
             core.wait(0.5)
 
             self.get_cross()
 
-        return trial_lst
+        # return trial_lst
 
     #
     def get_cross(self):
@@ -179,7 +182,7 @@ class session(object):
         core.wait(self.cross_time)
     #
     #
-    def create_csv(self, log_lst):
+    def create_csv(self):
 
         ppn_form = ('0'*(2-len(str(self.ppn))))+str(self.ppn)
         file_name = "PPN{}_{}.csv".format(ppn_form, self.date_time)
@@ -189,9 +192,15 @@ class session(object):
                                  'img_l', 'img_r', 'reward', 'tot_reward'])
 
 
-            for row in log_lst:
-                csv_writer.writerows(row)
+
+            # for row in self.trial_lst:
+            csv_writer.writerows(self.trial_lst)
 
         return True
+
+    def quit_q(self):
+        print(self.trial_lst)
+        self.create_csv()
+        core.quit()
 
 # window()
