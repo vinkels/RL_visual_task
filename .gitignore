@@ -3,8 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-output/sessions/
-*.csv
+output/sessions/*.csv
 
 # C extensions
 *.so
