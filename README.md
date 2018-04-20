@@ -5,6 +5,10 @@ task consists of three experimental phases:
 - learning phase
 - testing phase
 
+### To Do
+make it also psychopy standalone compatible.
+update .gitignore
+
 
 ### Getting Started
 
