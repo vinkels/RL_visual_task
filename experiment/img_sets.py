@@ -1,6 +1,8 @@
 from __future__ import absolute_import, division, print_function
 import random as rd
-import helpers as hp
+import sys, os
+sys.path.append("..")
+import RL_visual_task.helpers as hp
 import copy as cp
 
 

@@ -8,7 +8,7 @@ task consists of three experimental phases:
 
 ### Getting Started
 
-All code is designed to run and tested in python 2.7.13. To be able to run the code you need all libraries mentioned in prerequisites.To run the code navigate to the directory in your terminal and run main.py (python main.py).
+All code is designed to run and tested in python 2.7 and 3.6. To be able to run the code you need all libraries mentioned in prerequisites.To run the code navigate to the directory in your terminal and run main.py (python main.py).
 
 ### Prerequisites
 
@@ -19,7 +19,12 @@ All external libraries needed can be found in requirements.txt. To install requi
 pip install requirements-txt
 ```
 ### project structure
-All scripts used for preprocessing of images are located in the img_prep folder. These scripts are not always python2.7 compatible and are not needed to run the experiment.
+main.py is the execution script for the experiment. Here you can adjust parameters like participant number, reward scheme and keybinding for the learning phase.
+All scripts used for preprocessing of images are located in the img_prep folder.
+These scripts are not always python2.7 compatible and are not needed to run the experiment.
+In the experiment folder you can find scripts session.py that contains the actual experiment
+and img_sets.py that creates randomized images lists for every session.
+
 
 
 ### Running

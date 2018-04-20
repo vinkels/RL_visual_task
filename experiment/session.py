@@ -5,17 +5,19 @@ import random as rd
 
 
 class session(object):
-    def __init__(self, ppn, control_ph, learn_ph, test_ph, demo_ph,
+    def __init__(self, ppn, a_side, rwrd_sc,control_ph, learn_ph, test_ph, demo_ph,
                  img_time=1.250, cross_time = 1, a_time = 0.1):
         self.c_ph, self.l_ph, self.t_ph, self.demo_ph = control_ph, learn_ph, test_ph, demo_ph
         self.w_scr, self.h_scr = 1280, 800
+        self.a_side = a_side
+        self.rwrd_sc = rwrd_sc
         self.trial_num = 300
         self.demo_dir = 'images/demo/'
         self.img_dir = 'images/task/'
         self.out_dir = 'output/sessions/'
         self.img_scl = 0.8
         self.x_val = 0.5
-        self.cross_scl = 0.01
+        self.cross_scl = 0.08
         self.txt_scl = 0.2
         self.a_time = 0.1
         self.ppn = ppn
@@ -33,8 +35,8 @@ class session(object):
         self.win = visual.Window(size=(self.w_scr, self.h_scr),fullscr=True,
                                  monitor='testMonitor')
         self.fix_cros = visual.ShapeStim(win=self.win, vertices=((0, -self.cross_scl),
-                                        (0, self.cross_scl), (0,0),(-self.cross_scl,0),
-                                        (self.cross_scl, 0)),lineWidth=2,closeShape=False,
+                                        (0, self.cross_scl), (0,0),(-self.cross_scl*(6/8),0),
+                                        (self.cross_scl*(6/8), 0)),lineWidth=4,closeShape=False,
                                          lineColor="black")
 
         start_data = [str(self.ttl_timer), 'start begin']
@@ -63,10 +65,14 @@ class session(object):
     def test_phase(self):
         demo_two = [self.demo_ph[0], self.demo_ph[1], self.demo_ph[2]]
         demo_one = [self.demo_ph[0], self.demo_ph[3],self.demo_ph[2]]
-        self.show_instruct('intro.png')
+        self.show_instruct('demo.png')
         self.show_instruct('demo_two.png')
         self.set_two('demo_two', demo_two, 10)
-        self.show_instruct('demo_one.png')
+        if self.a_side == 'al':
+            dem_name = 'demo_second_al.png'
+        else:
+            dem_name = 'demo_second_ar.png'
+        self.show_instruct(dem_name)
         self.set_one('demo_one', demo_one, 10)
         self.cur_reward = 0
         self.show_instruct('end_demo.png')
@@ -116,11 +122,12 @@ class session(object):
             self.get_cross()
             self.trial_lst.append([str(datetime.datetime.now() - self.ttl_timer),phase, i, img_set[2][i],
                               key_name[0], key_name[1], img_one, img_two,0, 0])
-        # return trial_lst
 
     def set_one(self, phase, img_lst, reps):
-
-        # trial_lst = []
+        '''Function creates second phase. Shows one image for 100ms and registers keys
+            Takes phasename, list with image names and number of trials as ppn_input
+            adds variables [key pressed, image name, RT, reward, total reward, etc.]
+            to log list of participant session'''
         if phase.startswith('demo'):
             im_dir = self.demo_dir
         else:
@@ -134,34 +141,39 @@ class session(object):
             img_show.draw()
             self.win.flip()
             core.wait(0.1)
-            stim_l = visual.TextStim(self.win, 'no animal',
-               color='white', pos=(-0.6,-0.6))
-            stim_r = visual.TextStim(self.win, 'animal',
-               color='white', pos=(0.6,-0.6))
-            stim_l.draw()
-            stim_r.draw()
+
+            x_col = 'white'
+            self.fix_cros.lineColor = x_col
+            self.fix_cros.draw()
             trial_tmr = core.Clock()
             self.win.flip()
             keys = event.waitKeys(maxWait=1.150, keyList=["z", "slash"],timeStamped=trial_tmr)
             print(keys, img_a)
             get_reward, col = 0, 'white'
+            if self.a_side == 'al':
+                key_na, key_a = 'slash', 'z'
+            else:
+                key_na, key_a = 'z','slash'
             try:
                 key = keys[0]
-                if (key[0] == 'z' and img_a == 0) or (key[0] == 'slash' and img_a == 1):
+                if (key[0] == key_na and img_a == 0) or (key[0] == key_a and img_a == 1):
                     get_reward = img_rw
                     col = 'green'
+                    fb_txt = 'Correct'
                 else:
                     col = 'red'
+                    fb_txt = 'Incorrect'
             except:
                 key = [None, None]
                 col = 'yellow'
+                fb_txt = 'Incorrect'
 
             self.cur_reward += get_reward
 
-            stim1 = visual.TextStim(self.win, 'reward: '+str(get_reward),
+            stim1 = visual.TextStim(self.win, str(get_reward)+' points',
                color=col, pos=(0,0))
-            stim2 = visual.TextStim(self.win, 'total points: '+str(self.cur_reward),
-               color='white', pos=(0,-0.2))
+            stim2 = visual.TextStim(self.win, fb_txt,
+               color=col, pos=(0,0.3))
 
             stim1.draw()
             stim2.draw()
@@ -170,38 +182,44 @@ class session(object):
             self.trial_lst.append([str(datetime.datetime.now() - self.ttl_timer),phase, i, img_lst[2][i],
                               key[0],key[1], img_nm, img_rw,get_reward, self.cur_reward])
 
-            core.wait(0.5)
+            core.wait(1.0)
 
             self.get_cross()
-
-        # return trial_lst
+            if i in {1, 99, 199, 299}:
+                rwrd_stim = visual.TextStim(self.win, 'total points: '+str(self.cur_reward),
+                   color='white', pos=(0,0))
+                rwrd_stim.draw()
+                self.win.flip()
+                core.wait(1.0)
 
     #
     def get_cross(self):
+        '''Draws and shows black fixation cross on screen for [cross_time] time'''
 
+        x_col = 'black'
+        self.fix_cros.lineColor = x_col
         self.fix_cros.draw()
         self.win.flip()
         core.wait(self.cross_time)
     #
     #
     def create_csv(self):
+        '''Creates csv output file of session from session log list
+            Files can be found in output/sessions folder'''
 
         ppn_form = ('0'*(2-len(str(self.ppn))))+str(self.ppn)
-        file_name = "PPN{}_{}.csv".format(ppn_form, self.date_time)
+        file_name = "PPN{}_{}_{}_{}.csv".format(ppn_form, self.date_time, self.a_side,self.rwrd_sc)
         with open(self.out_dir+file_name, 'w') as csvfile:
             csv_writer = csv.writer(csvfile, delimiter=',')
             csv_writer.writerow(['time_stamp','phase','trial_nr','animal','key','RT',
                                  'img_l', 'img_r', 'reward', 'tot_reward'])
 
-
-
-            # for row in self.trial_lst:
             csv_writer.writerows(self.trial_lst)
 
         return True
 
     def quit_q(self):
-        print(self.trial_lst)
+        '''saves current log to csv and quits session'''
         self.create_csv()
         core.quit()
 
