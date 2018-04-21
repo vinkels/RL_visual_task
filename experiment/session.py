@@ -14,7 +14,7 @@ class session(object):
         self.trial_num = 300
         self.demo_dir = 'images/demo/'
         self.img_dir = 'images/task/'
-        self.out_dir = 'output/sessions/'
+        self.out_dir = 'output/ppn/'
         self.img_scl = 0.8
         self.x_val = 0.5
         self.cross_scl = 0.08
@@ -205,7 +205,7 @@ class session(object):
     #
     def create_csv(self):
         '''Creates csv output file of session from session log list
-            Files can be found in output/sessions folder'''
+            Files can be found in output/ppn folder'''
 
         ppn_form = ('0'*(2-len(str(self.ppn))))+str(self.ppn)
         file_name = "PPN{}_{}_{}_{}.csv".format(ppn_form, self.date_time, self.a_side,self.rwrd_sc)
