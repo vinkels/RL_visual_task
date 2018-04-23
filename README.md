@@ -4,11 +4,11 @@ task consists of three experimental phases:
 - control phase
 - learning phase
 - testing phase
+Control and testing phase are the same but with different image sets.
 
 ### To Do
-make it also psychopy standalone compatible.
-update .gitignore
-
+- clean up code
+- data analysis
 
 ### Getting Started
 
@@ -16,7 +16,7 @@ All code is designed to run and tested in python 2.7 and 3.6. To be able to run 
 
 ### Prerequisites
 
-Code can be run with in python 2.7 and 3.6.
+All code is tested in python3.6, but experiment scripts are also python 2.7 compatible.
 All external libraries needed can be found in requirements.txt. To install required libraries run the following line in terminal/command line. Read more about pip [here](https://pip.readthedocs.io/en/1.1/requirements.html).
 
 ```
@@ -32,8 +32,9 @@ and img_sets.py that creates randomized images lists for every session.
 
 
 ### Running
-download complete repository and navigate to repository in terminal.
+Download complete repository and navigate to repository in terminal.
 Run main.py in python 2 or 3 to run the experiment.
+**Make sure capslock is off, otherwise globalKeys will not work**
 ```
 python main.py
 ```

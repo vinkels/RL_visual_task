@@ -56,9 +56,8 @@ class session(object):
         self.trial_lst.append([str(datetime.datetime.now() - self.ttl_timer), 'start test'])
         test_log = self.set_two('test',self.t_ph, self.trial_num)
         self.show_instruct('exit.png')
+        print(self.cur_reward)
         self.create_csv()
-        # trial_log = self.create_csv([[start_data]+[con_data]+con_log+[learn_data]+learn_log
-                                     # +[test_data]+test_log])
         self.win.close()
 
 
@@ -85,7 +84,7 @@ class session(object):
         event.waitKeys()
 
     def set_two(self, phase, img_set, reps):
-        # trial_lst = []
+
         if phase.startswith('demo'):
             im_dir = self.demo_dir
         else:
@@ -148,7 +147,6 @@ class session(object):
             trial_tmr = core.Clock()
             self.win.flip()
             keys = event.waitKeys(maxWait=1.150, keyList=["z", "slash"],timeStamped=trial_tmr)
-            print(keys, img_a)
             get_reward, col = 0, 'white'
             if self.a_side == 'al':
                 key_na, key_a = 'slash', 'z'
