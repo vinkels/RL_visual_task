@@ -207,7 +207,7 @@ class session(object):
 
         ppn_form = ('0'*(2-len(str(self.ppn))))+str(self.ppn)
         file_name = "PPN{}_{}_{}_{}.csv".format(ppn_form, self.date_time, self.a_side,self.rwrd_sc)
-        with open(self.out_dir+file_name, 'w') as csvfile:
+        with open(self.out_dir+file_name, 'w', newline='') as csvfile:
             csv_writer = csv.writer(csvfile, delimiter=',')
             csv_writer.writerow(['time_stamp','phase','trial_nr','animal','key','RT',
                                  'img_l', 'img_r', 'reward', 'tot_reward'])

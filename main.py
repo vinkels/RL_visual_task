@@ -2,14 +2,22 @@ from __future__ import absolute_import, division, print_function
 from psychopy import core, gui
 from experiment.session import session
 from experiment.img_sets import img_sets
+from analysis.data_prep import data_prep
+from analysis.ppn_analyse import stats
 import helpers as hp
 import itertools, os, sys
 
 
-
 def main():
+
     hp.del_pyc()
     csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
+    ana_quest = input("do analysis?: [y/n]: ")
+    if ana_quest.lower() in ['y', 'yes']:
+        # results = data_prep(csv_lst)
+        results = stats()
+        sys.exit(0)
+
 
     reward_schemes = list(itertools.permutations([5,3,1]))
     myDlg = gui.Dlg(title="Visual Preferences")
