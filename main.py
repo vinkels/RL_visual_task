@@ -14,7 +14,7 @@ def main():
     csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
     ana_quest = input("do analysis?: [y/n]: ")
     if ana_quest.lower() in ['y', 'yes']:
-        # results = data_prep(csv_lst)
+        results = data_prep(csv_lst)
         results = stats()
         sys.exit(0)
 

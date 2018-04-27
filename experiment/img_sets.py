@@ -73,20 +73,6 @@ class img_sets(object):
         list_two = med_lm + low_lh + high_mh
         list_a = a_lm + a_lh + a_mh
 
-        type_dct = {}
-        for idx, value in enumerate(low_lm):
-            type_dct[value] = 'low_lm'
-            type_dct[high_lh[idx]] = 'high_lh'
-            type_dct[med_mh[idx]] = 'med_mh'
-            type_dct[med_lm[idx]] = 'med_lm'
-            type_dct[low_lh[idx]] = 'low_lh'
-            type_dct[high_mh[idx]] = 'high_mh'
-        hp.dict_pickle(type_dct, 'PPN{}_{}'.format(self.ppn, self.reward_val))
-
-        print(type_dct)
-
-
-
         list_tot = [list_one, list_two, list_a]
         one_shuf, two_shuf, a_shuf = self.shuffle_lists(list_tot)
 
@@ -125,7 +111,3 @@ class img_sets(object):
         rwd_lst = [3]*len(l_lst)
         [l_shuf, r_shuf, a_shuf] = self.shuffle_lists([l_lst,r_lst,a_lst])
         return [l_shuf, r_shuf, a_shuf, rwd_lst]
-
-
-# csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
-# img_sets(csv_lst,reward_val=(5,3,1))

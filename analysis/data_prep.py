@@ -60,7 +60,7 @@ class data_prep():
                         df_dict[val].append(tmp_lst[i])
 
         self.df = pd.DataFrame(columns=header,data=df_dict)
-        self.df.to_pickle('pickles/ana_set.pickle')
+        self.df.to_pickle('pickles/analysis/ana_set.pickle')
         self.df.to_csv('test.csv', sep=',',index=False)
 
     def get_condi(self, row):

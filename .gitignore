@@ -1,9 +1,10 @@
 # Byte-compiled / optimized / DLL files
+
+*.py[cod]
+.DS_Store
+
 __pycache__/
 *.py[cod]
-
-# ppn data
-output/ppn/*.csv
 
 # C extensions
 *.so
@@ -22,7 +23,6 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-
 
 
 # Django stuff:

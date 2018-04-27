@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 class stats():
 
     def __init__(self):
-        self.df = pd.read_pickle('pickles/ana_set.pickle')
+        self.df = pd.read_pickle('pickles/analysis/ana_set.pickle')
         self.get_stats()
 
     def get_stats(self):
