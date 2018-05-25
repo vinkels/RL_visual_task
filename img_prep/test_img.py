@@ -31,6 +31,6 @@ class test_img():
         print('succesfull {} files copied'.format(idx))
         test_dct['A'], test_dct['NA'] = a_lst, n_lst
         print(test_dct)
-        dict_pickle(test_dct, 'demo_dict')
+        dict_pickle(test_dct, 'pickles/demo_dict')
 
 test_img()

@@ -7,12 +7,12 @@ except:
    import pickle
 
 def dict_pickle(dict, name):
-    with open('pickles/{}.pickle'.format(name), 'wb') as handle:
+    with open('{}.pickle'.format(name), 'wb') as handle:
         pickle.dump(dict, handle, protocol=2)
         handle.close()
 
 def dict_unpickle(pickle_file):
-    with open('pickles/{}.pickle'.format(pickle_file), 'rb') as file:
+    with open('{}.pickle'.format(pickle_file), 'rb') as file:
         pickle_dict = pickle.load(file)
         file.close()
     return pickle_dict

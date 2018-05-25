@@ -1,13 +1,13 @@
 from ppn_analyse import stats as ppn
 import pandas as pd
-# from pandas.core import datetools
-# import statsmodels.api as sm
+import statsmodels.api as sm
 from scipy import stats
 import itertools as it
-# import pyvttbl as pt
-from collections import namedtuple
-from rpy2.robjects import r, pandas2ri
-pandas2ri.activate()
+import matplotlib.pyplot as plt
+from statsmodels.formula.api import ols
+from statsmodels.graphics.api import interaction_plot, abline_plot
+from statsmodels.stats.anova import 
+
 
 class statistics():
 
@@ -27,6 +27,7 @@ class statistics():
         self.group_dict = group_dict
         print(groups)
         # groups.box_plot('rt', factors=['iv1', 'iv2'])
+        sm.sAnovaRM()
         print(groups.anova('rt', sub='response_size', wfactors=['type', 'response']))
 
 statistics()

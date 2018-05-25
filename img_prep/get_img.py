@@ -13,9 +13,9 @@ class get_img(object):
         self.df = self.get_type()
         self.sorted_dict = self.sort_sets()
         self.dict_one, self.dict_two = self.split_sets()
-        hp.dict_pickle(self.sorted_dict, 'sorted_dict')
-        hp.dict_pickle(self.dict_one, 'dict_one')
-        hp.dict_pickle(self.dict_two, 'dict_two')
+        hp.dict_pickle(self.sorted_dict, 'pickles/sorted_dict')
+        hp.dict_pickle(self.dict_one, 'pickles/dict_one')
+        hp.dict_pickle(self.dict_two, 'pickles/dict_two')
 
     def get_type(self):
 

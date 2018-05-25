@@ -6,7 +6,7 @@ import random as rd
 
 class session(object):
     def __init__(self, ppn, a_side, rwrd_sc,control_ph, learn_ph, test_ph, demo_ph,
-                 img_time=1.250, cross_time = 1, a_time = 0.1):
+                 img_time=1.250, cross_time = 0.5, a_time = 0.1):
         self.c_ph, self.l_ph, self.t_ph, self.demo_ph = control_ph, learn_ph, test_ph, demo_ph
         self.w_scr, self.h_scr = 1280, 800
         self.a_side = a_side
@@ -26,6 +26,30 @@ class session(object):
         self.cross_time = cross_time
         self.cur_reward = 0
         self.trial_lst = []
+
+    def test(self):
+        self.ttl_timer = datetime.datetime.now()
+        self.win = visual.Window(size=(self.w_scr, self.h_scr),fullscr=True,
+                                 monitor='testMonitor')
+        event.globalKeys.add('q', func=self.quit_q)
+        self.win.mouseVisible = False
+        self.fix_cros = visual.ShapeStim(win=self.win, vertices=((0, -self.cross_scl),
+                                        (0, self.cross_scl), (0,0),(-self.cross_scl*(6/8),0),
+                                        (self.cross_scl*(6/8), 0)),lineWidth=4,closeShape=False,
+                                         lineColor="black")
+        for i in range(10):
+            timer_lst = []
+            in_txt = visual.ImageStim(win=self.win, image='images/instruct/exit.png', pos=(0,0))
+            in_txt.draw()
+            self.win.flip()
+            trial_tmr = core.Clock()
+            keys = event.waitKeys(maxWait=3.0, keyList=["z", "slash"], timeStamped=trial_tmr)
+            self.fix_cros.draw()
+            self.win.flip()
+            core.wait(0.5)
+            print(keys)
+
+
 
 
     def create_window(self):
@@ -56,7 +80,7 @@ class session(object):
         self.trial_lst.append([str(datetime.datetime.now() - self.ttl_timer), 'start test'])
         test_log = self.set_two('test',self.t_ph, self.trial_num)
         self.show_instruct('exit.png')
-        print(self.cur_reward)
+        # print(self.cur_reward)
         self.create_csv()
         self.win.close()
 
@@ -139,7 +163,7 @@ class session(object):
             img_show.size *= self.img_scl
             img_show.draw()
             self.win.flip()
-            core.wait(0.1)
+            core.wait(self.a_time)
 
             x_col = 'white'
             self.fix_cros.lineColor = x_col

@@ -1,5 +1,5 @@
 #datafiles
-*.csv
+*.pickle
 
 # temp files
 *.py[cod]

@@ -17,13 +17,13 @@ class data_prep():
 
     def get_data(self):
 
-        header = ['ppn', 'condition','rwd_lmh', 'trial_nr', 'animal', 'type','response','RT']
+        header = ['ppn', 'condition','rwd_lmh', 'trial_nr', 'animal', 'type','response','RT','lr']
         df_dict = {key:[] for key in header}
-
         for file_name in glob.glob(self.data_dir+'*.csv'):
             ppn_lst = file_name.replace('.csv', '').replace(self.data_dir, '').split('_')
-            ppn, rwrd = ppn_lst[0][3:5], self.rwrd_lst[int(ppn_lst[3])]
+            ppn, rwrd = int(ppn_lst[0][3:5]), self.rwrd_lst[int(ppn_lst[3])]
             rwrd_dict = {rwrd[0]:'l',rwrd[1]:'m',rwrd[2]:'h'}
+            print('ppn',ppn)
             with open(file_name, 'r') as csvfile:
                 csv_rd = csv.reader(csvfile, delimiter=',')
 
@@ -35,6 +35,7 @@ class data_prep():
                     if row[1] == 'control':
                         con = 'c'
                         type, resp = self.get_condi(row)
+                        side_key = self.get_balance(ppn,row[4],'c')
                     elif row[1] == 'learning':
                         con = 'lr'
                         trial_nr += 2000
@@ -42,26 +43,40 @@ class data_prep():
                         type = rwrd_dict[int(row[7])]
                         if row[4]:
                             resp = int(row[8])
+                        side_key = self.get_balance(ppn,row[4],'lr')
 
 
                     elif row[1] == 'test':
                         con = 't'
                         trial_nr += 3000
                         type, resp = self.get_condi(row)
+                        side_key = self.get_balance(ppn,row[4],'t')
                     else:
                         continue
                     if not row[5]:
-                        rt = None
+                        rt = 0.0
+                        side_key = 'n'
                     else:
                         rt = float(row[5])
 
-                    tmp_lst = [ppn,con, rwrd,trial_nr,int(row[3]), type, resp, rt]
+                    tmp_lst = [ppn,con, rwrd,trial_nr,int(row[3]), type, resp, rt, side_key]
                     for i, val in enumerate(header):
                         df_dict[val].append(tmp_lst[i])
 
         self.df = pd.DataFrame(columns=header,data=df_dict)
-        self.df.to_pickle('pickles/analysis/ana_set.pickle')
-        self.df.to_csv('test.csv', sep=',',index=False)
+        self.df.to_pickle('analysis/pickles/ana_set.pickle')
+        self.df.to_csv('analysis/output/ana_set.csv', sep=',',index=False)
+        print('done!')
+
+
+    def get_balance(self, ppn, key, condi):
+        if key == 'slash':
+            return 'r'
+        elif key == 'z':
+            return 'l'
+        elif key == None:
+            return 'n'
+
 
     def get_condi(self, row):
 

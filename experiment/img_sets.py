@@ -11,9 +11,9 @@ class img_sets(object):
         self.demo_num = demo_num
         self.csv_lst = csv_lst
         self.ppn = ppn
-        self.dict_one = hp.dict_unpickle('dict_one')
-        self.dict_two = hp.dict_unpickle('dict_two')
-        self.demo_dict = hp.dict_unpickle('demo_dict')
+        self.dict_one = hp.dict_unpickle('pickles/dict_one')
+        self.dict_two = hp.dict_unpickle('pickles/dict_two')
+        self.demo_dict = hp.dict_unpickle('pickles/demo_dict')
         self.set_size = 100
         self.part_animals = 0.5
         self.reward_val = reward_val

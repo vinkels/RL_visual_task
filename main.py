@@ -3,7 +3,7 @@ from psychopy import core, gui
 from experiment.session import session
 from experiment.img_sets import img_sets
 from analysis.data_prep import data_prep
-from analysis.ppn_analyse import stats
+# from analysis.ppn_analyse import stats
 import helpers as hp
 import itertools, os, sys
 
@@ -12,14 +12,15 @@ def main():
 
     hp.del_pyc()
     csv_lst = ['HIGH_A', 'HIGH_NA','MED_A', 'MED_NA', 'LOW_A', 'LOW_NA']
+    # [(5, 3, 1), (5, 1, 3), (3, 5, 1), (3, 1, 5), (1, 5, 3), (1, 3, 5)]
+    reward_schemes = list(itertools.permutations([5,3,1]))
+
     ana_quest = input("do analysis?: [y/n]: ")
     if ana_quest.lower() in ['y', 'yes']:
         results = data_prep(csv_lst)
-        results = stats()
         sys.exit(0)
 
 
-    reward_schemes = list(itertools.permutations([5,3,1]))
     myDlg = gui.Dlg(title="Visual Preferences")
     myDlg.addText('Subject info')
     myDlg.addField('ppn nr.(0-99): ')
@@ -42,6 +43,7 @@ def main():
         sys.exit(0)
 
     set = img_sets(ppn=ppn,csv_lst=csv_lst, reward_val=reward_schemes[rwrd])
+    print(set.contr_ph)
     cur_ses = session(ppn=ppn, a_side = a_sd,rwrd_sc=rwrd, control_ph=set.contr_ph,
                       learn_ph=set.learn_ph,test_ph=set.test_ph, demo_ph=set.demo_ph)
     cur_ses.create_window()

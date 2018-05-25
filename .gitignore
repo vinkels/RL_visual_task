@@ -31,3 +31,5 @@ var/
 
 # Sphinx documentation
 docs/_build/
+.Rproj.user
+.Rproj
