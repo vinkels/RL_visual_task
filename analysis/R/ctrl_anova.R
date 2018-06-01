@@ -33,6 +33,9 @@ ctrl_data$type = factor(ctrl_data$type,
                             levels=unique(ctrl_data$type))
 
 # repeated measures anova
+t.test(lml,lmm, paired=TRUE)
+t.test(lhl,lhh, paired=TRUE)
+t.test(mhm,mhh, paired=TRUE)
 ctrl.AOV <- aov(response_size~(response*type)+Error(ppn/(type*response)), data = ctrl_data)
 summary(ctrl.AOV)
 

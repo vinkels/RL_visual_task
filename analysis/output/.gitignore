@@ -1,9 +1,1 @@
-#datafiles
 *.csv
-
-# temp files
-*.py[cod]
-.DS_Store
-
-#keep gitignore
-!.gitignore
