@@ -37,7 +37,7 @@ shapiro.test(lr_set$response_size[lr_set$type=="h" & lr_set$response==5])
 
 
 # mixed anova
-aov_response_type <- aov(response_size ~ response*type + Error(ppn/type), data=lr_set)
+aov_response_type <- aov(response_size ~ response*type + Error(ppn/type), data=df.lr)
 summary(aov_response_type)
 
 

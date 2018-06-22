@@ -6,7 +6,7 @@ import itertools as it
 import matplotlib.pyplot as plt
 from statsmodels.formula.api import ols
 from statsmodels.graphics.api import interaction_plot, abline_plot
-from statsmodels.stats.anova import 
+from statsmodels.stats.anova import
 
 
 class statistics():
@@ -30,4 +30,5 @@ class statistics():
         sm.sAnovaRM()
         print(groups.anova('rt', sub='response_size', wfactors=['type', 'response']))
 
-statistics()
+if __name__ == '__main__':
+    statistics()

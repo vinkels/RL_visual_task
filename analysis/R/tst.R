@@ -83,9 +83,40 @@ t.test(t.lml,t.lmm, paired=TRUE)
 t.test(t.lhl,t.lhh, paired=TRUE)
 t.test(t.mhm,t.mhh, paired=TRUE)
 
+
+t.aov <- aov(percent ~ (response+condition)*reward, data=df.t)
+summary(t.aov)
+
 leveneTest(percent ~ group, data = df.t)
 
-lr.aov <- aov(percent ~ response*condition*reward + Error(ppn/reward), data=df.lr)
-summary(lr.aov)
-lr.aov <- aov(percent ~ response*condition + Error(ppn/condition), data=df.lr)
+t.aov <- aov(percent ~ (response+condition)*reward, data=df.t)
+summary(t.aov)
+t.c.aov <- aov(percent ~ (response+condition) + Error(ppn/(response+condition)), data=df.t)
+summary(t.c.aov)
+
+shapiro.test(t.1$percent)
+shapiro.test(t.3$percent)
+shapiro.test(t.5$percent)
+leveneTest(percent ~ factor(reward), data = df.t)
+
+r.aov <- aov(percent ~ reward + Error(ppn/reward), data = df.t)
+summary(r.aov)
+
+lml = df.t$percent[df.t$condition =='lm' & df.t$response == 'l']
+lmm = df.t$percent[df.t$condition =='lm' & df.t$response == 'm']
+lhl = df.t$percent[df.t$condition =='lh' & df.t$response == 'l']
+lhh = df.t$percent[df.t$condition =='lh' & df.t$response == 'h']
+mhm = df.t$percent[df.t$condition =='mh' & df.t$response == 'm']
+mhh = df.t$percent[df.t$condition =='mh' & df.t$response == 'h']
+lmn = df.t$percent[df.t$condition =='lm' & df.t$response == 'n']
+lhn = df.t$percent[df.t$condition =='lm' & df.t$response == 'n']
+mhn = df.t$percent[df.t$condition =='lm' & df.t$response == 'n']
+
+cs.aov <- aov(percent ~ condition*response + Error(ppn/(condition*response)),data=df.t)
+summary(cs.aov)
+
+
+
+
+
 
